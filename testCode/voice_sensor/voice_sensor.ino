@@ -23,7 +23,7 @@ PubSubClient client(mkrClient);
 
 // edit this for the light you are connecting to
 char mqtt_topic_all[] = "student/CASA0014/light/14/all/";
-char mqtt_topic_all[] = "student/CASA0014/light/14/pixel/";
+char mqtt_topic_single[] = "student/CASA0014/light/14/pixel/";
 
 void setup() {
   // Start the serial monitor to show output
@@ -55,24 +55,30 @@ void loop() {
 } 
 
 void sendmqtt_voice(){
-  
   int soundValue = analogRead(soundPin); 
   Serial.print("Sound level: ");
   Serial.println(soundValue);
   int lightNum = soundValue / 93;
   delay(100); 
-  
+  char mqtt_message[1200] = "{\"allLEDs\": [\n";
+  clearAllColor();
   // send a message to update the light
   for(int i = 0; i <12 ; i++){
-  char mqtt_message[100];
-  sprintf(mqtt_message, "{\"pixelid\": %d, \"R\": 0, \"G\": 255, \"B\": 128, \"W\": 200}", i);
-  Serial.println(mqtt_topic_voice);
-  Serial.println(mqtt_message);
-  if (client.publish(mqtt_topic_voice, mqtt_message)) {
+    char led[100];
+    sprintf(led, "{\"pixelid\": %d, \"R\": 0, \"G\": 255, \"B\": 128, \"W\": 200}", i);
+    Serial.println(mqtt_topic_all);
+    Serial.println(mqtt_message);
+    strcat(mqtt_message, led);
+    if (i < 11) {
+            strcat(mqtt_message, ",\n");
+        }
+  }
+  strcat(mqtt_message, "\n  ]\n}");
+
+  if (client.publish(mqtt_topic_all, mqtt_message)) {
     Serial.println("Message published");
   } else {
     Serial.println("Failed to publish message");
-  }
   }
   delay(100);
 }
@@ -175,3 +181,17 @@ void callback(char* topic, byte* payload, int length) {
   Serial.println();
 
 }
+
+ void clearAllColor(){
+  char mqtt_message[100];
+  char mqtt_topic[] = "student/CASA0014/light/14/all/";
+  sprintf(mqtt_message, "{\"method\":\"clear\"}" );
+    //sprintf(mqtt_message, "{\"method\": \"allrandom\"}");
+    Serial.println(mqtt_topic);
+    Serial.println(mqtt_message);
+     if (client.publish(mqtt_topic, mqtt_message)) {
+        Serial.println("Message published");
+  } else {
+        Serial.println("Failed to publish message");
+    }
+ }
