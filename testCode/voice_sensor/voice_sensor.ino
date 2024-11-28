@@ -13,7 +13,7 @@ const char* mqtt_server = "mqtt.cetools.org";
 const int mqtt_port = 1884;
 int status = WL_IDLE_STATUS;
 
-
+int lastLightNum = 0;
 
 WiFiServer server(80);
 WiFiClient wificlient;
@@ -22,8 +22,8 @@ WiFiClient mkrClient;
 PubSubClient client(mkrClient);
 
 // edit this for the light you are connecting to
-char mqtt_topic_all[] = "student/CASA0014/light/14/all/";
-char mqtt_topic_single[] = "student/CASA0014/light/14/pixel/";
+char mqtt_topic_all[] = "student/CASA0014/light/37/all/";
+char mqtt_topic_single[] = "student/CASA0014/light/37/pixel/";
 
 void setup() {
   // Start the serial monitor to show output
@@ -55,32 +55,36 @@ void loop() {
 } 
 
 void sendmqtt_voice(){
-  int soundValue = analogRead(soundPin); 
+  int soundLevel = analogRead(soundPin);
   Serial.print("Sound level: ");
-  Serial.println(soundValue);
-  int lightNum = soundValue / 93;
-  delay(100); 
-  char mqtt_message[1200] = "{\"allLEDs\": [\n";
-  clearAllColor();
+  Serial.println(soundLevel);
+  int lightNum = map(soundLevel,0,1023,1,5);
+  char mqtt_message[100];
+  // clearAllColor();
   // send a message to update the light
-  for(int i = 0; i <12 ; i++){
-    char led[100];
-    sprintf(led, "{\"pixelid\": %d, \"R\": 0, \"G\": 255, \"B\": 128, \"W\": 200}", i);
-    Serial.println(mqtt_topic_all);
-    Serial.println(mqtt_message);
-    strcat(mqtt_message, led);
-    if (i < 11) {
-            strcat(mqtt_message, ",\n");
-        }
+  if (lastLightNum > lightNum){
+      for(int i = 0; i < lastLightNum - lightNum; i++){
+        clearAllColor(21 + i);
+      }
   }
-  strcat(mqtt_message, "\n  ]\n}");
+  for(int i = 0; i <lightNum; i++){
+    // sprintf(mqtt_message, "{\"pixelid\": %d, \"R\": 0, \"G\": 255, \"B\": 128, \"W\": 255}\n", i);
+    setOneLight(25-i);
+    // strcat(mqtt_message, led);
+    // if (i < lightNum) {
+    //         strcat(mqtt_message, ",\n");
+    //     }
+  }
+  // strcat(mqtt_message, "]}");
+  // Serial.println(mqtt_topic_all);
+  // Serial.println(mqtt_message);
 
-  if (client.publish(mqtt_topic_all, mqtt_message)) {
-    Serial.println("Message published");
-  } else {
-    Serial.println("Failed to publish message");
-  }
-  delay(100);
+  // if (client.publish(mqtt_topic_all, mqtt_message)) {
+  //   Serial.println("Message published");
+  // } else {
+  //   Serial.println("Failed to publish message");
+  // }
+  lastLightNum = lightNum;
 }
 
 void startWifi(){
@@ -182,16 +186,33 @@ void callback(char* topic, byte* payload, int length) {
 
 }
 
- void clearAllColor(){
+ void clearAllColor(int num){
   char mqtt_message[100];
-  char mqtt_topic[] = "student/CASA0014/light/14/all/";
-  sprintf(mqtt_message, "{\"method\":\"clear\"}" );
+  char mqtt_topic[100];
+  sprintf(mqtt_topic, "student/CASA0014/light/%d/all/",num);
+  sprintf(mqtt_message, "{\"method\": \"clear\"}" );
     //sprintf(mqtt_message, "{\"method\": \"allrandom\"}");
     Serial.println(mqtt_topic);
     Serial.println(mqtt_message);
      if (client.publish(mqtt_topic, mqtt_message)) {
         Serial.println("Message published");
-  } else {
+    } else {
         Serial.println("Failed to publish message");
     }
+    delay(100);
+ }
+
+ void setOneLight(int num){
+  char mqtt_message[100];
+  char mqtt_topic[100];
+  sprintf(mqtt_topic, "student/CASA0014/light/%d/all/",num);
+  sprintf(mqtt_message, "{\"method\": \"allrandom\"}" );
+    Serial.println(mqtt_topic);
+    Serial.println(mqtt_message);
+     if (client.publish(mqtt_topic, mqtt_message)) {
+        Serial.println("Message published");
+    } else {
+        Serial.println("Failed to publish message");
+    }
+    delay(100);
  }
