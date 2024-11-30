@@ -4,6 +4,7 @@
 #include "arduino_secrets.h" 
 
 #define soundPin A0
+#define LDR A1
 
 const char* ssid          = SECRET_SSID;
 const char* password      = SECRET_PASS;
@@ -13,23 +14,24 @@ const char* mqtt_server = "mqtt.cetools.org";
 const int mqtt_port = 1884;
 int status = WL_IDLE_STATUS;
 
-int lastLightNum = 0;
+//Light 
+const int startLightIndex = 40;
+const int endLightIndex = 42;
+const int totalLightNum = 3;
+//smooth sound sesnor data 
+int lastLightNum = endLightIndex - startLightIndex;
 const int sampleSize = 10;
 int samples[sampleSize];
 int sampleIndex = 0;
 
-const int startLightIndex = 31;
-const int endLightIndex = 5;
-const int totalLightNum = 5;
+
+//WIFI connect 
 WiFiServer server(80);
 WiFiClient wificlient;
 
 WiFiClient mkrClient;
 PubSubClient client(mkrClient);
 
-// edit this for the light you are connecting to
-char mqtt_topic_all[] = "student/CASA0014/light/37/all/";
-char mqtt_topic_single[] = "student/CASA0014/light/37/pixel/";
 
 void setup() {
   // Start the serial monitor to show output
@@ -61,7 +63,10 @@ void loop() {
 } 
 
 void sendmqtt_voice(){
-  int soundLevel = analogRead(soundPin);
+  int soundLevel = 1023;//analogRead(soundPin);
+  int lightLevel = analogRead(LDR);
+  
+ 
   
   samples[sampleIndex] = soundLevel; // store in sample array 
   sampleIndex = (sampleIndex + 1) % sampleSize; // update sample 
@@ -73,33 +78,22 @@ void sendmqtt_voice(){
   averageValue /= sampleSize;
 
   int lightNum = map(averageValue,0,1023,1,totalLightNum);
+  int lightlBrightness = map(lightLevel,0,1023,20,119);
   Serial.print("Sound level: ");
   Serial.println(averageValue);
+  Serial.print("Light level: ");
+  Serial.println(lightLevel);
   char mqtt_message[100];
-  // clearAllColor();
-  // send a message to update the light
   if (lastLightNum > lightNum){
-      for(int i = 0; i < lastLightNum - lightNum; i++){
+      for(int i = startLightIndex; i < lastLightNum - lightNum ; i++){
         clearAllColor(startLightIndex + i);
       }
   }
   for(int i = 0; i <lightNum; i++){
-    // sprintf(mqtt_message, "{\"pixelid\": %d, \"R\": 0, \"G\": 255, \"B\": 128, \"W\": 255}\n", i);
+    setbrightness(endLightIndex - i, lightlBrightness);
     setOneLight(endLightIndex - i);
-    // strcat(mqtt_message, led);
-    // if (i < lightNum) {
-    //         strcat(mqtt_message, ",\n");
-    //     }
   }
-  // strcat(mqtt_message, "]}");
-  // Serial.println(mqtt_topic_all);
-  // Serial.println(mqtt_message);
 
-  // if (client.publish(mqtt_topic_all, mqtt_message)) {
-  //   Serial.println("Message published");
-  // } else {
-  //   Serial.println("Failed to publish message");
-  // }
   lastLightNum = lightNum;
 }
 
@@ -199,7 +193,6 @@ void callback(char* topic, byte* payload, int length) {
     Serial.print((char)payload[i]);
   }
   Serial.println();
-
 }
 
  void clearAllColor(int num){
@@ -218,11 +211,31 @@ void callback(char* topic, byte* payload, int length) {
     delay(100);
  }
 
- void setOneLight(int num){
+
+  void setOneLight(int num){
   char mqtt_message[100];
   char mqtt_topic[100];
-  sprintf(mqtt_topic, "student/CASA0014/light/%d/all/",num);
-  sprintf(mqtt_message, "{\"method\": \"allrandom\"}" );
+  sprintf(mqtt_topic, "student/CASA0014/light/%d/pixel/",num);
+  for(int i = 0; i < 12; i++){
+      // send a message to update the light
+      char mqtt_message[100];
+      sprintf(mqtt_message, "{\"pixelid\": %d, \"R\": 255, \"G\": 0, \"B\": 0, \"W\": 20}", i);
+      Serial.println(mqtt_topic);
+      Serial.println(mqtt_message);
+      if (client.publish(mqtt_topic, mqtt_message, false)) {
+        Serial.println("Message published");
+      } else {
+        Serial.println("Failed to publish message");
+      }
+  }
+    delay(100);
+ }
+
+ void setbrightness(int lightID, int brightness){
+  char mqtt_message[100];
+  char mqtt_topic[100];
+  sprintf(mqtt_topic, "student/CASA0014/light/%d/brightness/",lightID);
+  sprintf(mqtt_message, "{\"brightness\": \"%d\"}", brightness);
     Serial.println(mqtt_topic);
     Serial.println(mqtt_message);
      if (client.publish(mqtt_topic, mqtt_message)) {

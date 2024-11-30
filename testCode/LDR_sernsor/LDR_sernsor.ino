@@ -20,13 +20,10 @@ WiFiClient wificlient;
 WiFiClient mkrClient;
 PubSubClient client(mkrClient);
 
-// edit this for the light you are connecting to
-char mqtt_topic_all[] = "student/CASA0014/light/37/all/";
-char mqtt_topic_single[] = "student/CASA0014/light/37/pixel/";
 
 void setup() {
   // Start the serial monitor to show output
-   Serial.begin(115200);
+  Serial.begin(115200);
   delay(1000);
 
   WiFi.setHostname("Lumina ucjtdjw");
@@ -57,8 +54,8 @@ void sendmqtt_LDR(){
   int lightLevel = analogRead(LDR);
   Serial.print("Light level: ");
   Serial.println(lightLevel);
-  int lightlBrightness = map(lightLevel,0,1023,1,119);
-  setbrightness(14, lightlBrightness);
+  int lightlBrightness = map(lightLevel,0,1023,0,119);
+  setbrightness(12, lightlBrightness);
   // for(int i = 0; i <lightNum; i++){
   //   // sprintf(mqtt_message, "{\"pixelid\": %d, \"R\": 0, \"G\": 255, \"B\": 128, \"W\": 255}\n", i);
   //   setbrightness(i+lightN);

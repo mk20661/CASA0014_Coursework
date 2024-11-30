@@ -3,6 +3,7 @@
 #include <utility/wifi_drv.h>   // library to drive to RGB LED on the MKR1010
 #include "arduino_secrets.h" 
 
+#define LDR A1
 #define soundPin A0
 
 const char* ssid          = SECRET_SSID;
@@ -13,23 +14,20 @@ const char* mqtt_server = "mqtt.cetools.org";
 const int mqtt_port = 1884;
 int status = WL_IDLE_STATUS;
 
-int lastLightNum = 0;
-const int sampleSize = 10;
-int samples[sampleSize];
-int sampleIndex = 0;
 
-const int startLightIndex = 31;
-const int endLightIndex = 5;
-const int totalLightNum = 5;
 WiFiServer server(80);
 WiFiClient wificlient;
 
 WiFiClient mkrClient;
 PubSubClient client(mkrClient);
 
-// edit this for the light you are connecting to
-char mqtt_topic_all[] = "student/CASA0014/light/37/all/";
-char mqtt_topic_single[] = "student/CASA0014/light/37/pixel/";
+const int sampleSize = 10;
+int samples[sampleSize];
+int sampleIndex = 0;
+
+const int lightID = 15;
+
+
 
 void setup() {
   // Start the serial monitor to show output
@@ -56,13 +54,17 @@ void loop() {
   // check for messages from the broker and ensuring that any outgoing messages are sent.
   client.loop();
 
-  sendmqtt_voice();
+  sendmqtt();
 
 } 
-
-void sendmqtt_voice(){
+int lastPxielNum = 0;
+void sendmqtt(){
+  int lightLevel = analogRead(LDR);
   int soundLevel = analogRead(soundPin);
-  
+  Serial.print("Light level: ");
+  Serial.println(lightLevel);
+  int lightlBrightness = map(lightLevel,0,1023,0,119);
+  setbrightness(lightlBrightness);
   samples[sampleIndex] = soundLevel; // store in sample array 
   sampleIndex = (sampleIndex + 1) % sampleSize; // update sample 
 
@@ -71,25 +73,40 @@ void sendmqtt_voice(){
     averageValue += samples[i];
   }
   averageValue /= sampleSize;
-
-  int lightNum = map(averageValue,0,1023,1,totalLightNum);
+  int r,g,b;
+  int pixelNum = map(averageValue,0,1023,1,12);
+ if (averageValue <= 200) {
+    r = 255;//white
+    g = 255;
+    b = 255;
+ }else if (averageValue > 200 && averageValue <= 400){
+    r = 0;//green
+    g = 255;
+    b = 0;
+ }else if (averageValue >400 && averageValue <= 600){
+    r = 0;//blue
+    g = 0;
+    b = 255;
+ }else if (averageValue >600 && averageValue <= 800){
+    r = 255;//yellow
+    g = 255;
+    b = 0;
+ }else{
+    r = 255;//red
+    g = 0;
+    b = 0;
+ }
   Serial.print("Sound level: ");
   Serial.println(averageValue);
   char mqtt_message[100];
-  // clearAllColor();
-  // send a message to update the light
-  if (lastLightNum > lightNum){
-      for(int i = 0; i < lastLightNum - lightNum; i++){
-        clearAllColor(startLightIndex + i);
-      }
+  if (lastPxielNum > pixelNum){
+    for(int i = 11; i > (lastPxielNum - pixelNum);i-- ){
+        clearOnePxile(i);
+    }
   }
-  for(int i = 0; i <lightNum; i++){
-    // sprintf(mqtt_message, "{\"pixelid\": %d, \"R\": 0, \"G\": 255, \"B\": 128, \"W\": 255}\n", i);
-    setOneLight(endLightIndex - i);
-    // strcat(mqtt_message, led);
-    // if (i < lightNum) {
-    //         strcat(mqtt_message, ",\n");
-    //     }
+
+  for(int i = 0; i < pixelNum; i++){
+    setOnePxiel(i,r,g,b);
   }
   // strcat(mqtt_message, "]}");
   // Serial.println(mqtt_topic_all);
@@ -100,7 +117,7 @@ void sendmqtt_voice(){
   // } else {
   //   Serial.println("Failed to publish message");
   // }
-  lastLightNum = lightNum;
+  lastPxielNum = pixelNum;
 }
 
 void startWifi(){
@@ -202,11 +219,11 @@ void callback(char* topic, byte* payload, int length) {
 
 }
 
- void clearAllColor(int num){
+ void clearOnePxile(int num){
   char mqtt_message[100];
   char mqtt_topic[100];
-  sprintf(mqtt_topic, "student/CASA0014/light/%d/all/",num);
-  sprintf(mqtt_message, "{\"method\": \"clear\"}" );
+  sprintf(mqtt_topic, "student/CASA0014/light/%d/pixel/",lightID);
+  sprintf(mqtt_message, "{\"pixelid\": %d, \"R\": 0, \"G\": 0, \"B\": 0, \"W\": 0}", num);
     //sprintf(mqtt_message, "{\"method\": \"allrandom\"}");
     Serial.println(mqtt_topic);
     Serial.println(mqtt_message);
@@ -215,14 +232,14 @@ void callback(char* topic, byte* payload, int length) {
     } else {
         Serial.println("Failed to publish message");
     }
-    delay(100);
+    delay(10);
  }
 
- void setOneLight(int num){
+ void setbrightness(int brightness){
   char mqtt_message[100];
   char mqtt_topic[100];
-  sprintf(mqtt_topic, "student/CASA0014/light/%d/all/",num);
-  sprintf(mqtt_message, "{\"method\": \"allrandom\"}" );
+  sprintf(mqtt_topic, "student/CASA0014/light/%d/brightness/",lightID);
+  sprintf(mqtt_message, "{\"brightness\": \"%d\"}", brightness);
     Serial.println(mqtt_topic);
     Serial.println(mqtt_message);
      if (client.publish(mqtt_topic, mqtt_message)) {
@@ -230,5 +247,20 @@ void callback(char* topic, byte* payload, int length) {
     } else {
         Serial.println("Failed to publish message");
     }
-    delay(100);
+    delay(10);
+ }
+
+ void setOnePxiel(int num,int R, int G, int B){
+  char mqtt_message[100];
+  char mqtt_topic[100];
+  sprintf(mqtt_topic, "student/CASA0014/light/%d/pixel/",lightID);
+  sprintf(mqtt_message, "{\"pixelid\": %d, \"R\": %d, \"G\": %d, \"B\": %d, \"W\": 0}", num,R,G,B);
+    Serial.println(mqtt_topic);
+    Serial.println(mqtt_message);
+     if (client.publish(mqtt_topic, mqtt_message)) {
+        Serial.println("Message published");
+    } else {
+        Serial.println("Failed to publish message");
+    }
+    delay(10);
  }
