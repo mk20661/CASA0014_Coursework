@@ -87,6 +87,7 @@ Welcome to the **SoundDancing** project! This idea is inspired by my own rhythm 
 ##### Circuit Diagram
 
 ### Next Steps:
+
 - [ ] Combine the OLED screen and Rotary encoder to the main project
 - [ ]
 
