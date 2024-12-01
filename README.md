@@ -74,7 +74,7 @@ Welcome to the **SoundDancing** project! This idea is inspired by my own rhythm 
 - [x] Rotary encoder test
 - [x] Combine the OLED screen and rotary encoder to achieve the selection function
 - [x] Combine the Light sensor and Sound sensor to control the Chrono Lumina Light remotely
-- [ing] During the test processing, found the noise will influence the sound data collection. It need to a way to avoid this issue. Now, find two ways:   
+- [ ] **(Doing)** During the test processing, found the noise will influence the sound data collection. It need to a way to avoid this issue. Now, find two ways:   
 **1.** Use the sample windows to calculate the average data  (on software part)   
 **2.** Develop a filter to filter the noise (on hardware part)
 #### Current status
