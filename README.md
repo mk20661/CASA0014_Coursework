@@ -32,12 +32,12 @@ Welcome to the **SoundDancing** project! This idea is inspired by my own rhythm 
 
 ## Features ✨
 
-- [√] **Light Monitoring**: Detect environmental light levels using a light sensor to adjust the brightness of Chrono Lumina Light.
-- [√] **Sound Detection**: Detect environmental sound using a microphone sensor to collect sound data, and using these data to control remotely the Chrono Lumina Light.
-- [√] **OLED Screen Display**: Display the option to the user to select the color mode (Single Mode and Random Color Mode).
-- [√] **Wi-Fi Connectivity**: Transmit data remotely using the MKR 1010 WiFi board, control the Chrono Lumina Light remotely.
-- [X] **Sound Processing**: Find a way to avoid the noise and other elements, which will influence the sound data **(Doing now)**
-- [X] **User Alerts**: Provide a rotary encoder to let user can choose the color mode on the screen. **(Waiting to combine)**
+- [x] **Light Monitoring**: Detect environmental light levels using a light sensor to adjust the brightness of Chrono Lumina Light.
+- [x] **Sound Detection**: Detect environmental sound using a microphone sensor to collect sound data, and using these data to control remotely the Chrono Lumina Light.
+- [x] **OLED Screen Display**: Display the option to the user to select the color mode (Single Mode and Random Color Mode).
+- [x] **Wi-Fi Connectivity**: Transmit data remotely using the MKR 1010 WiFi board, control the Chrono Lumina Light remotely.
+- [ ] **Sound Processing**: Find a way to avoid the noise and other elements, which will influence the sound data **(Doing now)**
+- [ ] **User Alerts**: Provide a rotary encoder to let user can choose the color mode on the screen. **(Waiting to combine)**
 
 ---
 
@@ -67,13 +67,13 @@ Welcome to the **SoundDancing** project! This idea is inspired by my own rhythm 
 ## Progress and Roadmap 🗓
 
 ### Current Progress:
-- [√] Light sensor test
-- [√] Sound sensor test
-- [√] OLED screen test
-- [√] MQTT connection test and public messages to topic test
-- [√] Rotary encoder test
-- [√] Combine the OLED screen and rotary encoder to achieve the selection function
-- [√] Combine the Light sensor and Sound sensor to control the Chrono Lumina Light remotely
+- [x] Light sensor test
+- [x] Sound sensor test
+- [x] OLED screen test
+- [x] MQTT connection test and public messages to topic test
+- [x] Rotary encoder test
+- [x] Combine the OLED screen and rotary encoder to achieve the selection function
+- [x] Combine the Light sensor and Sound sensor to control the Chrono Lumina Light remotely
 - [ing] During the test processing, found the noise will influence the sound data collection. It need to a way to avoid this issue. Now, find two ways:   
 **1.** Use the sample windows to calculate the average data  (on software part)   
 **2.** Develop a filter to filter the noise (on hardware part)
