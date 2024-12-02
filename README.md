@@ -26,7 +26,9 @@ This project is currently under development. Major features are being implemente
 </div>
  
    
-Welcome to the **SoundDancing** project! This idea is inspired by my own rhythm lights and my strong interest in the fusion of sound and light and shadow. In my previous projects, I designed a smart devices based on environmental data, the learning assistants that monitor the learning environment and sound playback systems. This made me realize that sound can not only be heard, but can also be "seen" in a more intuitive way. So, I would like to develop the soundDancing to achieve the sound visualization. 
+Welcome to the **SoundDancing** project! This idea is inspired by my own rhythm lights and my strong interest in the fusion of sound and light and shadow. In my previous projects, I designed a smart devices based on environmental data, the learning assistants that monitor the learning environment and sound playback systems. This made me realize that sound can not only be heard, but can also be "seen" in a more intuitive way. So, I would like to develop the soundDancing to achieve the sound visualization.   
+
+Through the spectral analysis and rhythm extraction of environmental sounds, the **SoundDancing** is driven by an optimized algorithm to present diverse lighting patterns, enabling it to adapt to different sound scenarios (such as music, ambient sounds, or speech). This project not only embodies the cross-domain connection between sound and vision but also offers novel ideas for the research and design of interactive intelligent devices.
 
 ---
 
