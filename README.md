@@ -89,6 +89,17 @@ Welcome to the **SoundDancing** project! This idea is inspired by my own rhythm 
 <img src="./ReadMeSrc/img/workflow.png" alt="circuit">
 </div>
 
+
+-  Sound Sensor     
+     - Based on the sound level from sound sensor to turn on different number led of neopixel (sound level (0 - 1023) map to leds number (0 - 12))
+        - the sound level is equal or greater than 200 the led color is white
+        - the sound level is greater than 200 and  equal or smaller than 400 the led color is green
+        - the sound level is greater than 400 and  equal or smaller than 600 the led color is blue
+        - the sound level is greater than 600 and  equal or smaller than 800 the led color is yellow
+        - the color of the other sound level is red
+     - Based on the light level from LDR to adjust the brightness of the LED
+        - light level (0 - 1023) map to brightness value(0 - 120)
+
 ### Next Steps:
 
 - [ ] Combine the OLED screen and Rotary encoder to the main project  
@@ -96,6 +107,12 @@ Welcome to the **SoundDancing** project! This idea is inspired by my own rhythm 
 - [ ] Optimized encloser 
 - [ ] Control more Chrono Lumina Lights, not only one
 - [ ] Future updating
+
+##### Future expectation
+<div align="center">
+<img src="./ReadMeSrc/img/futrueWorkflow.png" alt="circuit2">
+</div>
+
 ---
 
 ## License 📜
