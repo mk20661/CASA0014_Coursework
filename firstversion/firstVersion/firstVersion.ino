@@ -25,7 +25,7 @@ const int sampleSize = 10;
 int samples[sampleSize];
 int sampleIndex = 0;
 
-const int lightID = 15;
+const int lightID = 7;
 
 
 
