@@ -108,7 +108,11 @@ Through the spectral analysis and rhythm extraction of environmental sounds, the
 -  LDR
     - Based on the light level from LDR to adjust the brightness of the LED
         - light level (0 - 1023) map to brightness value(0 - 120)
-##### Demonstration:
+### Demonstration:
+Video: 
+<video width="400" controls autoplay>
+    <source src="./ReadMeSrc/ce.mp4" type="video/mp4">
+</video>
 
 ### Future Plan:
 
