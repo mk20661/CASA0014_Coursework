@@ -1,9 +1,10 @@
 # SoundDancing
-  <div align="center">
-<img src="./ReadMeSrc/img/37f52d12dba750406626fa2875f9a6ca.jpg" alt="11" width="150" height="150">
-</div>
+
 An Arduino-based project designed to create a sound-reactive and light-reactive to control remotely Chrono Lumina through sound sensor, LDR, NeoPixel and MQTT.     
 This project is the Assignment for **CASA0014 Connected Environments**. 
+<div align="center">
+<img src="./ReadMeSrc/img/37f52d12dba750406626fa2875f9a6ca.jpg" alt="11" width="150" height="150">
+</div>
 
 ## Project Status 🚧
 
