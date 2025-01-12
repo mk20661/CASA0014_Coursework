@@ -5,7 +5,10 @@ This project is the Assignment for **CASA0014 Connected Environments**.
 
 ## Project Status 🚧
 
-This project is currently under development. Major features are being implemented, and some functionalities are still in progress.
+This project has finished the prototype. Major features has being implemented, and still will improve in the future.
+<div align="center">
+<img src="./ReadMeSrc/img/1aeaeb81a5c16ff70a46be5764e9bd0.jpg" alt="prototype" width="500" height="500">
+</div>
 
 ---
 
@@ -67,7 +70,7 @@ Through the spectral analysis and rhythm extraction of environmental sounds, the
 
 ## Progress and Roadmap 🗓
 
-### Current Progress:
+### Progress:
 - [x] Light sensor test
 - [x] Sound sensor test
 - [x] OLED screen test
@@ -75,9 +78,9 @@ Through the spectral analysis and rhythm extraction of environmental sounds, the
 - [x] Rotary encoder test
 - [x] Combine the OLED screen and rotary encoder together to achieve the selection function
 - [x] Combine the Light sensor and Sound sensor to control the Chrono Lumina Light remotely and released the first version of project. Control the one Chrono Lumina Light.
-- [ ] **(Doing)** During the test processing, found the noise will influence the sound data collection. It need to a way to avoid this issue. Now, find two ways:   
-**1.** Use the sample windows to calculate the average data  (on software part)   
-**2.** Develop a filter to filter the noise (on hardware part)
+- [x] During the test processing, found the noise will influence the sound data collection. It need to a way to avoid this issue. Use the sample windows to calculate the average data  (on software part) 
+- [x] Combine the OLED screen and Rotary encoder to the main project  
+- [x] Optimized encloser 
 #### Current status
 
 ##### Circuit Diagram
@@ -90,29 +93,27 @@ Through the spectral analysis and rhythm extraction of environmental sounds, the
 <img src="./ReadMeSrc/img/workflow.png" alt="circuit">
 </div>
 
+- OLED Screen and Rotary encoder
+     - User can select like color
+        - Red
+        - Blue
+        - Green
+        - Yellow
+        - white
+        - Purple
 
 -  Sound Sensor     
-     - Based on the sound level from sound sensor to turn on different number led of neopixel (sound level (0 - 1023) map to leds number (0 - 12))
-        - the sound level is equal or greater than 200 the led color is white
-        - the sound level is greater than 200 and  equal or smaller than 400 the led color is green
-        - the sound level is greater than 400 and  equal or smaller than 600 the led color is blue
-        - the sound level is greater than 600 and  equal or smaller than 800 the led color is yellow
-        - the color of the other sound level is red
-     - Based on the light level from LDR to adjust the brightness of the LED
+     - Based on the sound level from sound sensor to turn on different number led of neopixel 
+        - sound level (30-150 db) map to leds number (0 - 12)
+-  LDR
+    - Based on the light level from LDR to adjust the brightness of the LED
         - light level (0 - 1023) map to brightness value(0 - 120)
 
-### Next Steps:
+### Future Plan:
 
-- [ ] Combine the OLED screen and Rotary encoder to the main project  
 - [ ] Develop the filter, such as the low pass filter, and using FFT to ensure the sound data clean
-- [ ] Optimized encloser 
 - [ ] Control more Chrono Lumina Lights, not only one
 - [ ] Future updating
-
-##### Future expectation
-<div align="center">
-<img src="./ReadMeSrc/img/futrueWorkflow.png" alt="circuit2">
-</div>
 
 ---
 
