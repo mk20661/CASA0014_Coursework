@@ -38,8 +38,8 @@ Through the spectral analysis and rhythm extraction of environmental sounds, the
 - [x] **Sound Detection**: Detect environmental sound using a microphone sensor to collect sound data, and using these data to control remotely the Chrono Lumina Light.
 - [x] **OLED Screen Display**: Display the option to the user to select the color mode (Single Mode and Random Color Mode).
 - [x] **Wi-Fi Connectivity**: Transmit data remotely using the MKR 1010 WiFi board, control the Chrono Lumina Light remotely.
-- [ ] **Sound Processing**: Find a way to avoid the noise and other elements, which will influence the sound data **(Doing now)**
-- [ ] **User Alerts**: Provide a rotary encoder to let user can choose the color mode on the screen. **(Waiting to combine)**
+- [x] **Sound Processing**: Find a way to avoid the noise and other elements, which will influence the sound data.
+- [x] **User Alerts**: Provide a rotary encoder to let user can choose the color mode on the screen.
 
 ---
 
@@ -63,7 +63,6 @@ Through the spectral analysis and rhythm extraction of environmental sounds, the
     - `Adafruit_SSD1306`
     - `WiFiNINA`
     - `PubSubClient`
-    - Continue... future update
 ---
 
 ## Progress and Roadmap 🗓
